@@ -12,6 +12,9 @@ docker build -f nginx/Dockerfile -t danielgarcia992/nginx nginx
 # Image PHP
 docker build -f php/Dockerfile -t danielgarcia992/php php
 
+# Create a volume
+docker volume create --driver=local mysqldata
+
 
 # ------------------------------------
 # 		Creating a network
@@ -29,6 +32,7 @@ redis:alpine
 docker run --rm -d \
 --name mysql \
 --network my_network \
+-v mysqldata:/var/lib/mysql \
 -e MYSQL_ROOT_PASSWORD=root \
 -e MYSQL_DATABASE=docker \
 -e MYSQL_USER=docker \
