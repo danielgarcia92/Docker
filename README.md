@@ -1,5 +1,7 @@
 # Docker
 
+> Dockerizing a PHP project
+
 ## Build Setup
 
 ``` bash
@@ -9,6 +11,50 @@ docker build -f nginx/Dockerfile -t danielgarcia992/nginx nginx
 
 # Image PHP
 docker build -f php/Dockerfile -t danielgarcia992/php php
+
+
+# ------------------------------------
+# 		Creating a network
+
+docker network create my_network
+docker network ls
+
+# Container Redis
+docker run --rm -d \
+--name redis \
+--network my_network \
+redis:alpine
+
+# Container MySQL
+docker run --rm -d \
+--name mysql \
+--network my_network \
+-e MYSQL_ROOT_PASSWORD=root \
+-e MYSQL_DATABASE=docker \
+-e MYSQL_USER=docker \
+-e MYSQL_PASSWORD=docker \
+-p 3306:3306 \
+mysql:5.7
+
+# Container PHP
+docker run --rm -d \
+--name php \
+-v $(pwd)/application:/var/www/html \
+--network my_network \
+danielgarcia992/php
+
+# Container Nginx
+docker run --rm -d \
+--name nginx \
+-v $(pwd)/application:/var/www/html \
+-p 80:80 \
+--network my_network \
+danielgarcia992/nginx
+
+
+# ------------------------------------
+#  Linking containers without network
+#  not recomended
 
 # Container Redis
 docker run --rm -d \
