@@ -1,0 +1,45 @@
+version: '3'
+services:
+  nginx:
+    build: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./application:/var/www/html
+    networks:
+      - docker
+  php:
+    build: php
+    volumes:
+      - ./application:/var/www/html
+    networks:
+      - docker
+  mysql:
+    image: mysql:5.7
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: docker
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    ports:
+      - "3306:3306"
+    volumes: 
+      - mysqldata:/var/lib/mysql
+    networks:
+      - docker
+  redis:
+    image: redis:alpine
+    volumes:
+      - redisdata:/data
+    networks:
+      - docker
+networks:
+  docker:
+    driver: "bridge"
+volumes:
+  mysqldata:
+    driver: "local"
+  redisdata:
+    driver: "local"
+  
+
