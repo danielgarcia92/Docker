@@ -56,6 +56,46 @@ docker run --rm -d \
 danielgarcia992/nginx
 
 
+# --------------------------------------------
+# Create a laravel application in a container
+docker run --rm -it \
+-v $(pwd):/opt \
+-w /opt \
+--network dockercompose_docker \  # Network name created by docker-compose
+dockercompose_php \
+composer create-project laravel/laravel application
+
+
+# -------------------------------------------
+# Install predis/predis package with Composer
+docker run --rm -i -t \
+-v $(pwd)/application:/opt \
+-w /opt \
+--network dockercompose_docker \
+dockercompose_php \
+composer require predis/predis
+
+
+# ---------------------------------
+# Install Laravel auth
+docker run --rm -i -t \
+-v $(pwd)/application:/opt \
+-w /opt \
+--network dockercompose_docker \
+dockercompose_php \
+php artisan make:auth
+
+
+# -----------------------
+# Migrate DB
+docker run --rm -i -t \
+-v $(pwd)/application:/opt \
+-w /opt \
+--network dockercompose_docker \
+dockercompose_php \
+php artisan migrate
+
+
 # ------------------------------------
 #  Linking containers without network
 #  not recomended
